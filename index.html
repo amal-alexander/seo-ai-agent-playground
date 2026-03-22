@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amal Alexander | SEO AI Agent Playground</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030307;
+            --bg2: #07070f;
+            --bg3: #0d0d1a;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(255, 255, 255, 0.12);
+            --txt: #f0f0ff;
+            --txt2: #7a7a9d;
+            --txt3: #3d3d5c;
+            --green: #00ff88;
+            --cyan: #00d4ff;
+            --purple: #a855f7;
+            --orange: #ff6b35;
+            --pink: #f472b6;
+            --yellow: #f59e0b;
+            --red: #f43f5e;
+            --emerald: #34d399;
+            --blue: #60a5fa;
+            --lime: #a3e635;
+
+            /* node accent per type */
+            --c-seotech: #22d3ee;
+            --c-seocontent: #f472b6;
+            --c-linkbuilder: #fb923c;
+            --c-analyst: #818cf8;
+            --c-intl: #60a5fa;
+            --c-ecom: #34d399;
+            --c-cwv: #f87171;
+            --c-calendar: #a3e635;
+            --c-gap: #f43f5e;
+            --c-crawler: #06b6d4;
+            --c-sitemap: #f59e0b;
+            --c-pagespeed: #f97316;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ─── NOISE OVERLAY ─────────────────────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        /* ─── GRID BACKGROUND ───────────────────────── */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── NAV ───────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            background: rgba(3, 3, 7, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--txt2);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--txt);
+        }
+
+        .nav-cta {
+            background: var(--green) !important;
+            color: #000 !important;
+            padding: 8px 20px !important;
+            border-radius: 6px !important;
+            font-weight: 700 !important;
+            font-size: 12px !important;
+            letter-spacing: 1px !important;
+        }
+
+        /* ─── HERO ──────────────────────────────────── */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            text-align: center;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+
+        .hero-orb-1 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%);
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: orb-drift 12s ease-in-out infinite alternate;
+        }
+
+        .hero-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 70%);
+            bottom: 0;
+            right: 10%;
+            animation: orb-drift 8s ease-in-out infinite alternate-reverse;
+        }
+
+        .hero-orb-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            bottom: 10%;
+            left: 5%;
+            animation: orb-drift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes orb-drift {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(30px, -20px);
+            }
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 100px;
+            padding: 6px 16px 6px 6px;
+            margin-bottom: 32px;
+            font-size: 12px;
+            color: var(--txt2);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-pill-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        .hero-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: var(--green);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .hero-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(80px, 12vw, 160px);
+            line-height: 0.9;
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .hero-role {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(28px, 4vw, 52px);
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 28px;
+        }
+
+        .hero-desc {
+            max-width: 560px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--txt2);
+            margin: 0 auto 48px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #00e67a;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--txt);
+            border: 1px solid var(--border-glow);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ─── SCROLL INDICATOR ──────────────────────── */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--txt3);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--border-glow), transparent);
+            animation: scroll-line 2s ease-in-out infinite;
+        }
+
+        @keyframes scroll-line {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scaleY(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleY(0.6);
+            }
+        }
+
+        /* ─── STATS BAR ─────────────────────────────── */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            padding: 0 48px;
+            margin-bottom: 0;
+        }
+
+        .stats-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--bg2);
+        }
+
+        .stat-item {
+            padding: 40px 32px;
+            border-right: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-color, var(--green));
+            opacity: 0.6;
+        }
+
+        .stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 52px;
+            line-height: 1;
+            color: var(--txt);
+            margin-bottom: 6px;
+        }
+
+        .stat-num span {
+            background: linear-gradient(90deg, var(--accent-color, var(--green)), var(--txt));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--txt2);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* ─── SECTION WRAPPER ───────────────────────── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 120px 48px;
+        }
+
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--green);
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 6vw, 80px);
+            letter-spacing: 2px;
+            line-height: 1;
+            color: var(--txt);
+            margin-bottom: 24px;
+        }
+
+        .section-sub {
+            font-size: 16px;
+            color: var(--txt2);
+            line-height: 1.7;
+            max-width: 560px;
+        }
+
+        /* ─── BIO SECTION ───────────────────────────── */
+        .bio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-top: 80px;
+        }
+
+        .bio-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--txt2);
+            margin-bottom: 20px;
+        }
+
+        .bio-text strong {
+            color: var(--txt);
+            font-weight: 600;
+        }
+
+        .bio-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 32px;
+        }
+
+        .skill-chip {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            color: var(--txt2);
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .skill-chip:hover {
+            background: rgba(0, 255, 136, 0.07);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--green);
+        }
+
+        .bio-card-side {
+            position: relative;
+        }
+
+        .profile-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--purple), transparent);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            border: 2px solid var(--border-glow);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: var(--txt);
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            color: var(--green);
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 1px;
+            margin-bottom: 28px;
+        }
+
+        .profile-tags {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .profile-tag {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--txt2);
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .profile-tag-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* ─── NODES / AGENTS SECTION ────────────────── */
+        .agents-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 64px;
+        }
+
+        .nodes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .nodes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nodes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .node-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-c), transparent);
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .node-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            border: 1px solid var(--accent-c);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .node-card:hover {
+            background: rgba(255, 255, 255, 0.025);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .node-card:hover::after {
+            opacity: 0.3;
+        }
+
+        .node-card:hover::before {
+            opacity: 1;
+        }
+
+        .node-glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-c) 0%, transparent 70%);
+            opacity: 0;
+            top: -100px;
+            right: -100px;
+            filter: blur(40px);
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .node-card:hover .node-glow {
+            opacity: 0.08;
+        }
+
+        .node-icon-wrap {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+        }
+
+        .node-icon-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-c);
+            box-shadow: 0 0 8px var(--accent-c);
+        }
+
+        .node-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--txt);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .node-desc {
+            font-size: 13px;
+            color: var(--txt2);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .node-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .node-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--accent-c);
+        }
+
+        .node-arrow {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--txt3);
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .node-card:hover .node-arrow {
+            background: var(--accent-c);
+            border-color: var(--accent-c);
+            color: #000;
+        }
+
+        /* Node specific accents */
+        .nc-seotech {
+            --accent-c: var(--c-seotech);
+        }
+
+        .nc-seocontent {
+            --accent-c: var(--c-seocontent);
+        }
+
+        .nc-linkbuilder {
+            --accent-c: var(--c-linkbuilder);
+        }
+
+        .nc-analyst {
+            --accent-c: var(--c-analyst);
+        }
+
+        .nc-intl {
+            --accent-c: var(--c-intl);
+        }
+
+        .nc-ecom {
+            --accent-c: var(--c-ecom);
+        }
+
+        .nc-cwv {
+            --accent-c: var(--c-cwv);
+        }
+
+        .nc-calendar {
+            --accent-c: var(--c-calendar);
+        }
+
+        .nc-gap {
+            --accent-c: var(--c-gap);
+        }
+
+        .nc-crawler {
+            --accent-c: var(--c-crawler);
+        }
+
+        .nc-sitemap {
+            --accent-c: var(--c-sitemap);
+        }
+
+        .nc-pagespeed {
+            --accent-c: var(--c-pagespeed);
+        }
+
+        .nc-meta {
+            --accent-c: var(--green);
+        }
+
+        .nc-ai {
+            --accent-c: var(--purple);
+        }
+
+        /* ─── WORKFLOW SECTION ──────────────────────── */
+        .workflow-section {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-top: 64px;
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .workflow-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .workflow-step:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(0, 255, 136, 0.2);
+        }
+
+        .step-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: var(--txt3);
+            line-height: 1;
+            flex-shrink: 0;
+            width: 40px;
+            text-align: right;
+            padding-top: 2px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--txt);
+            margin-bottom: 6px;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: var(--txt2);
+            line-height: 1.6;
+        }
+
+        .workflow-visual {
+            position: relative;
+        }
+
+        .console-mockup {
+            background: var(--bg3);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+        }
+
+        .console-topbar {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot-red {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff5f57;
+        }
+
+        .dot-yellow {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffbd2e;
+        }
+
+        .dot-green {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #28c840;
+        }
+
+        .console-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--txt3);
+            margin-left: 8px;
+            letter-spacing: 1px;
+        }
+
+        .console-body {
+            padding: 24px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            line-height: 2;
+        }
+
+        .log-line {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .log-time {
+            color: var(--txt3);
+            flex-shrink: 0;
+        }
+
+        .log-success {
+            color: var(--green);
+        }
+
+        .log-ai {
+            color: var(--purple);
+        }
+
+        .log-info {
+            color: var(--cyan);
+        }
+
+        .log-warn {
+            color: var(--yellow);
+        }
+
+        .log-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: var(--green);
+            vertical-align: middle;
+            animation: cursor-blink 0.8s infinite;
+        }
+
+        @keyframes cursor-blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* ─── MARQUEE ────────────────────────────────── */
+        .marquee-section {
+            padding: 0;
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .marquee-wrap {
+            display: flex;
+            gap: 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee-scroll 30s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 40px;
+            border-right: 1px solid var(--border);
+            white-space: nowrap;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--txt3);
+        }
+
+        .marquee-item span {
+            color: var(--green);
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ─── CTA SECTION ───────────────────────────── */
+        .cta-section {
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 80px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center top, rgba(168, 85, 247, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-box .section-title {
+            margin-bottom: 20px;
+        }
+
+        .cta-box .section-sub {
+            margin: 0 auto 40px;
+            max-width: 480px;
+        }
+
+        /* ─── FOOTER ────────────────────────────────── */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 32px 48px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: var(--txt2);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .footer-social-link {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--txt);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-glow);
+            background: rgba(255, 255, 255, 0.04);
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-social-link:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.4);
+            color: var(--green);
+        }
+
+        /* ─── SECTION DIVIDER ───────────────────────── */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+        }
+
+        /* ─── ANIMATIONS ON SCROLL ──────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: all 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── RESPONSIVE ────────────────────────────── */
+        /* ─── SOCIALS ───────────────────────────────── */
+        .socials-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 32px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--txt2);
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glow);
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 255, 136, 0.07);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--green);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                padding: 0 20px;
+            }
+
+            nav .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 64px 20px;
+            }
+
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bio-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .agents-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+
+            .stats-bar {
+                padding: 0 20px;
+            }
+
+            .cta-box {
+                padding: 40px 24px;
+            }
+
+            .hero {
+                padding: 100px 20px 80px;
+            }
+
+            .hero-name {
+                font-size: clamp(56px, 14vw, 100px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-item {
+                padding: 24px 16px;
+            }
+
+            .stat-num {
+                font-size: 38px;
+            }
+
+            .nodes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-box .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .workflow-step {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .step-num {
+                width: auto;
+                text-align: left;
+            }
+
+            footer {
+                padding: 28px 20px;
+            }
+
+            .footer-links {
+                gap: 8px;
+            }
+
+            .footer-social-link {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .profile-card {
+                padding: 28px 20px;
+            }
+
+            .console-body {
+                padding: 16px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-bg"></div>
+    <canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">SEO AI AGENT PLAYGROUND</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#nodes">Nodes</a>
+            <a href="#workflow">Workflow</a>
+            <a href="mailto:amalalex95@gmail.com" class="nav-cta">Get In Touch ↗</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+
+        <div class="hero-pill">
+            <span class="hero-pill-dot"></span>
+            Available for projects worldwide
+        </div>
+
+        <div class="hero-eyebrow">Built by Amal Alexander</div>
+
+        <h1 class="hero-name">SEO AI<br>AGENT</h1>
+        <div class="hero-role">Playground</div>
+
+        <p class="hero-desc">
+            I build AI-powered SEO tools that do the work of an entire agency, crawling, analyzing, and strategizing at
+            machine speed.
+        </p>
+
+        <div class="hero-btns">
+            <a href="mailto:contact@youremail.com" class="btn btn-primary">Get in touch ↗</a>
+            <a href="#nodes" class="btn btn-ghost">Explore Nodes →</a>
+        </div>
+
+        <div class="scroll-hint">
+            <div class="scroll-line"></div>
+            Scroll
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item" style="--accent-color: var(--green)">
+                <div class="stat-num"><span>14</span>+</div>
+                <div class="stat-label">AI Agent Nodes Built</div>
+            </div>
+            <div class="stat-item" style="--accent-color: var(--cyan)">
+                <div class="stat-num"><span>3</span></div>
+                <div class="stat-label">LLM Models Integrated</div>
+            </div>
+            <div class="stat-item" style="--accent-color: var(--purple)">
+                <div class="stat-num"><span>5</span>+</div>
+                <div class="stat-label">OSS Packages Published</div>
+            </div>
+            <div class="stat-item" style="--accent-color: var(--orange)">
+                <div class="stat-num"><span>∞</span></div>
+                <div class="stat-label">URLs Processed Daily</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section" style="margin-top:0; padding-top:0">
+        <div class="marquee-wrap">
+            <div class="marquee-track" id="marquee">
+                <div class="marquee-item"><span>⚙</span> Technical SEO Audits</div>
+                <div class="marquee-item"><span>🐸</span> Ultra Frog Crawler</div>
+                <div class="marquee-item"><span>🔬</span> Content Gap Analysis</div>
+                <div class="marquee-item"><span>📊</span> SEO Data Analyst</div>
+                <div class="marquee-item"><span>🌍</span> International SEO</div>
+                <div class="marquee-item"><span>🛒</span> E-commerce SEO</div>
+                <div class="marquee-item"><span>⚡</span> Core Web Vitals</div>
+                <div class="marquee-item"><span>🔗</span> Link Building</div>
+                <div class="marquee-item"><span>🗓️</span> Content Calendar</div>
+                <div class="marquee-item"><span>📑</span> Google Sheets Export</div>
+                <!-- duplicate for seamless loop -->
+                <div class="marquee-item"><span>⚙</span> Technical SEO Audits</div>
+                <div class="marquee-item"><span>🐸</span> Ultra Frog Crawler</div>
+                <div class="marquee-item"><span>🔬</span> Content Gap Analysis</div>
+                <div class="marquee-item"><span>📊</span> SEO Data Analyst</div>
+                <div class="marquee-item"><span>🌍</span> International SEO</div>
+                <div class="marquee-item"><span>🛒</span> E-commerce SEO</div>
+                <div class="marquee-item"><span>⚡</span> Core Web Vitals</div>
+                <div class="marquee-item"><span>🔗</span> Link Building</div>
+                <div class="marquee-item"><span>🗓️</span> Content Calendar</div>
+                <div class="marquee-item"><span>📑</span> Google Sheets Export</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="section-inner">
+            <div class="section-label">About</div>
+            <h2 class="section-title">Who Am I?</h2>
+
+            <div class="bio-grid">
+                <div class="bio-text fade-up">
+                    <p>
+                        I'm <strong>Amal Alexander</strong>. Besides my core SEO skills, I've built tons of App Script
+                        and Python tools to automate and scale search solutions. My technical expertise covers
+                        JavaScript, React, Next.js, Flask, and Streamlit, along with experience in Node.js, Tailwind
+                        CSS, and SQL databases.
+                    </p>
+                    <p>
+                        I've also developed and published several Python and Node.js packages to the community. I
+                        specialize in building tools for AI Overviews, Bing, and ASO turning new ideas into real,
+                        working packages.
+                    </p>
+
+                    <div class="bio-skills">
+                        <span class="skill-chip">JavaScript</span>
+                        <span class="skill-chip">Python</span>
+                        <span class="skill-chip">React</span>
+                        <span class="skill-chip">Next.js</span>
+                        <span class="skill-chip">Flask</span>
+                        <span class="skill-chip">Streamlit</span>
+                        <span class="skill-chip">Node.js</span>
+                        <span class="skill-chip">Tailwind CSS</span>
+                        <span class="skill-chip">SQL</span>
+                        <span class="skill-chip">App Script</span>
+                        <span class="skill-chip">Selenium</span>
+                        <span class="skill-chip">LLM APIs</span>
+                    </div>
+
+                    <!-- SOCIALS -->
+                    <div class="socials-row">
+                        <a href="https://www.linkedin.com/in/amal-alexander-305780131/" target="_blank"
+                            class="social-link" title="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                <rect x="2" y="9" width="4" height="12" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="mailto:amalalex95@gmail.com" class="social-link" title="Email">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                            Email
+                        </a>
+                        <a href="https://wa.me/917977475259" target="_blank" class="social-link" title="WhatsApp">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+                            </svg>
+                            WhatsApp
+                        </a>
+                        <a href="https://www.instagram.com/amal_alex_96/" target="_blank" class="social-link"
+                            title="Instagram">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                            Instagram
+                        </a>
+                        <a href="https://x.com/amallx1997" target="_blank" class="social-link" title="X / Twitter">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                            X
+                        </a>
+                        <a href="https://www.facebook.com/amal.lx.9" target="_blank" class="social-link"
+                            title="Facebook">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                            </svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bio-card-side fade-up">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <img src="amal.png" alt="Amal Alexander">
+                        </div>
+                        <div class="profile-name">Amal Alexander</div>
+                        <div class="profile-role">SEO EXPERT AND AI AUTOMATION BUILDER</div>
+                        <div class="profile-tags">
+                            <div class="profile-tag">
+                                <div class="profile-tag-icon" style="background:rgba(0,255,136,0.1)">🔍</div>
+                                Technical SEO & Crawl Architecture
+                            </div>
+                            <div class="profile-tag">
+                                <div class="profile-tag-icon" style="background:rgba(168,85,247,0.1)">🧠</div>
+                                LLM Integration & Prompt Engineering
+                            </div>
+                            <div class="profile-tag">
+                                <div class="profile-tag-icon" style="background:rgba(0,212,255,0.1)">⚡</div>
+                                Core Web Vitals & Performance
+                            </div>
+                            <div class="profile-tag">
+                                <div class="profile-tag-icon" style="background:rgba(244,114,182,0.1)">📝</div>
+                                Content Strategy & Gap Analysis
+                            </div>
+                            <div class="profile-tag">
+                                <div class="profile-tag-icon" style="background:rgba(251,146,60,0.1)">🔗</div>
+                                Link Building Automation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NODES SECTION -->
+    <section id="nodes" style="padding-top:0">
+        <div class="section-inner">
+            <div class="agents-header">
+                <div>
+                    <div class="section-label">Agent Nodes</div>
+                    <h2 class="section-title">SEO AI Agent<br>Playground</h2>
+                </div>
+                <p class="section-sub" style="max-width:380px">
+                    Every node is a specialized AI agent. Drag, drop, connect and execute full SEO workflows end to end.
+                </p>
+            </div>
+
+            <div class="nodes-grid">
+
+                <!-- SEO Technical Manager -->
+                <div class="node-card nc-seotech fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        ⚙️
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Technical Manager</div>
+                    <div class="node-desc">Runs advanced technical audits covering JavaScript rendering, server log
+                        analysis, crawlability issues, schema validation, and site architecture deep-dives.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Qwen 2.5-72B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- SEO Content Manager -->
+                <div class="node-card nc-seocontent fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        ✍️
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Content Manager</div>
+                    <div class="node-desc">Strategizes on-page content using NLP algorithms, topic clusters, TF-IDF
+                        scoring, and SERP intent mapping to build winning content strategies.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Nemotron-4-340B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Link Building Manager -->
+                <div class="node-card nc-linkbuilder fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🔗
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Link Building Manager</div>
+                    <div class="node-desc">Automates outreach identification, processes backlink gaps, and generates
+                        tailored link-building strategies including digital PR and broken link tactics.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Qwen 2.5-72B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- SEO Data Analyst -->
+                <div class="node-card nc-analyst fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        📊
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Data Analyst</div>
+                    <div class="node-desc">Synthesizes large-scale traffic signals from Search Console, PageSpeed, SERP,
+                        and crawl data to produce executive-grade SEO health reports.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Nemotron-4-340B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- International SEO Manager -->
+                <div class="node-card nc-intl fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🌍
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">International SEO Manager</div>
+                    <div class="node-desc">Manages hreflang implementation, localized content gaps, geo-targeted
+                        indexation issues, and recommends ccTLD vs subfolder structures.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Qwen 2.5-72B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- E-commerce SEO Manager -->
+                <div class="node-card nc-ecom fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🛒
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">E-commerce SEO Manager</div>
+                    <div class="node-desc">Optimizes faceted navigation, handles product cannibalization, scales
+                        category pages, and builds PDP/PLP-level content strategies.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Nemotron-4-340B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Core Web Vitals Fixer -->
+                <div class="node-card nc-cwv fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        ⚡
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Core Web Vitals Fixer</div>
+                    <div class="node-desc">Generates code-level fixes for LCP, INP, CLS, and TBT from PageSpeed Insights
+                        data real implementation guidance, not generic tips.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Qwen 2.5-72B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Content Calendar Agent -->
+                <div class="node-card nc-calendar fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🗓️
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Content Calendar</div>
+                    <div class="node-desc">Auto-generates 3-month editorial plans based on SERP trends, keyword
+                        opportunities, team size, and publishing cadence.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Nemotron-4-340B</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Content Gap Pipeline -->
+                <div class="node-card nc-gap fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🔬
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Content Gap Pipeline</div>
+                    <div class="node-desc">Cross-references your site against multiple ranked competitors to surface
+                        missing keywords, topics, and content angles to dominate.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">AI Analyzer</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Ultra Frog Crawler -->
+                <div class="node-card nc-crawler fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🐸
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Ultra Frog SEO Crawler</div>
+                    <div class="node-desc">Deep-crawls entire domains with custom XPath extraction rules, gathering meta
+                        tags, H1/H2s, word counts, load times, and schema data at scale.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">URL Crawler</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- XML Sitemap Health -->
+                <div class="node-card nc-sitemap fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🗺️
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">XML Sitemap Health</div>
+                    <div class="node-desc">Crawls every URL in your XML sitemap, flags broken links, redirects, and
+                        indexation issues exportable directly to Google Sheets.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Sitemap Auditor</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Page Speed Insights -->
+                <div class="node-card nc-pagespeed fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        📈
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Page Speed Insights</div>
+                    <div class="node-desc">Fetches dual mobile and desktop CWV scores via Google PSI API LCP, INP, CLS,
+                        TTFB, FCP visualized with scoring bars and optimization opportunities.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Google PSI API</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Meta Extractor -->
+                <div class="node-card nc-meta fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        📋
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Meta Extractor</div>
+                    <div class="node-desc">Pulls all SEO metadata title tags, descriptions, OG tags, canonical URLs,
+                        robots directives, language attributes, internal/external link counts.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Extractor</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- SEO Analyzer (AI) -->
+                <div class="node-card nc-ai fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🧠
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">SEO Analyzer</div>
+                    <div class="node-desc">AI deep analysis that scores pages 0–100 and streams a detailed audit
+                        covering content quality, technical health, and ranking potential.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">NVIDIA AI</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Google SERP -->
+                <div class="node-card nc-pagespeed fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🔍
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Google SERP Node</div>
+                    <div class="node-desc">Analyzes search engine results pages to identify high-performing content, competitor rankings, and keyword intent at scale.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">SERP API</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Keyword Extractor -->
+                <div class="node-card nc-meta fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🏷️
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Keyword Extractor</div>
+                    <div class="node-desc">Pulls high-value keywords directly from top-ranking pages, identifying semantic clusters and search volume opportunities.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">NLP Node</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- Off-Page Checker -->
+                <div class="node-card nc-linkbuilder fade-up">
+                    <div class="node-glow"></div>
+                    <div class="node-icon-wrap">
+                        🧱
+                        <div class="node-icon-dot"></div>
+                    </div>
+                    <div class="node-title">Off-Page Checker</div>
+                    <div class="node-desc">Monitors backlink profiles, indexing status, and site authority metrics to ensure off-page SEO efforts are effective.</div>
+                    <div class="node-footer">
+                        <span class="node-badge">Authority Auditor</span>
+                        <div class="node-arrow">→</div>
+                    </div>
+                </div>
+
+                <!-- AI Tech Support -->
+                <div class="node-card nc-ai fade-up" style="--accent-c: var(--green); border: 1px solid var(--green);">
+                    <div class="node-glow" style="background: radial-gradient(circle, var(--green) 0%, transparent 70%);"></div>
+                    <div class="node-icon-wrap">
+                        🆘
+                        <div class="node-icon-dot" style="background: var(--green); box-shadow: 0 0 8px var(--green);"></div>
+                    </div>
+                    <div class="node-title">AI Tech Support</div>
+                    <div class="node-desc"><strong>Power User Feature:</strong> This agent can build and deploy custom nodes directly into your workflow on demand. Need a custom API integration? This node builds it.</div>
+                    <div class="node-footer">
+                        <span class="node-badge" style="color: var(--green); border-color: var(--green);">Custom Node Builder</span>
+                        <div class="node-arrow" style="background: var(--green); color: #000;">→</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section class="workflow-section" id="workflow">
+        <div class="section-inner">
+            <div class="section-label">How It Works</div>
+            <h2 class="section-title">From URL to<br>Action Plan</h2>
+
+            <div class="workflow-grid">
+                <div class="workflow-steps">
+                    <div class="workflow-step fade-up">
+                        <div class="step-num">01</div>
+                        <div class="step-content">
+                            <div class="step-title">Drag Your Nodes</div>
+                            <div class="step-desc">Pull input nodes (URL, Keyword), processor nodes (Crawler, Meta
+                                Extractor), and AI agent nodes onto the canvas. Connect them with wires.</div>
+                        </div>
+                    </div>
+                    <div class="workflow-step fade-up">
+                        <div class="step-num">02</div>
+                        <div class="step-content">
+                            <div class="step-title">Execute the Workflow</div>
+                            <div class="step-desc">Hit Execute. The engine runs each node in order crawling, extracting,
+                                and streaming AI analysis in real time. Watch the wires light up.</div>
+                        </div>
+                    </div>
+                    <div class="workflow-step fade-up">
+                        <div class="step-num">03</div>
+                        <div class="step-content">
+                            <div class="step-title">AI Agents Analyze</div>
+                            <div class="step-desc">Qwen 2.5-72B and Nemotron-4-340B process your data and stream
+                                expert-level SEO strategies, audits, and fix plans directly into each node.</div>
+                        </div>
+                    </div>
+                    <div class="workflow-step fade-up">
+                        <div class="step-num">04</div>
+                        <div class="step-content">
+                            <div class="step-title">Export to Google Sheets</div>
+                            <div class="step-desc">Route results through the Google Sheets node to auto-export crawl
+                                data, PSI scores, sitemap audits, and AI analysis to your spreadsheet.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Console mockup -->
+                <div class="workflow-visual fade-up">
+                    <div class="console-mockup">
+                        <div class="console-topbar">
+                            <div class="dot-red"></div>
+                            <div class="dot-yellow"></div>
+                            <div class="dot-green"></div>
+                            <span class="console-title">execution.log</span>
+                        </div>
+                        <div class="console-body">
+                            <div class="log-line"><span class="log-time">00:00:01</span><span class="log-info">===
+                                    Workflow execution started ===</span></div>
+                            <div class="log-line"><span class="log-time">00:00:02</span><span class="log-success">URL
+                                    ready: bajajfinserv.in</span></div>
+                            <div class="log-line"><span class="log-time">00:00:04</span><span class="log-info">🐸 Ultra
+                                    Frog: Starting site crawl...</span></div>
+                            <div class="log-line"><span class="log-time">00:00:07</span><span
+                                    class="log-success">Crawled: /personal-loan [200 OK]</span></div>
+                            <div class="log-line"><span class="log-time">00:00:09</span><span
+                                    class="log-success">Crawled: /home-loan [200 OK]</span></div>
+                            <div class="log-line"><span class="log-time">00:00:11</span><span class="log-warn">⚡
+                                    PageSpeed: Analyzing mobile + desktop...</span></div>
+                            <div class="log-line"><span class="log-time">00:00:18</span><span class="log-success">✅
+                                    Mobile: 64 | Desktop: 81</span></div>
+                            <div class="log-line"><span class="log-time">00:00:19</span><span class="log-ai">⚙️ Qwen
+                                    2.5-72B activating...</span></div>
+                            <div class="log-line"><span class="log-time">00:00:21</span><span class="log-ai">✍️
+                                    Nemotron-4-340B activating...</span></div>
+                            <div class="log-line"><span class="log-time">00:00:38</span><span class="log-success">✅
+                                    Technical Audit complete</span></div>
+                            <div class="log-line"><span class="log-time">00:00:41</span><span class="log-success">✅
+                                    Content Strategy complete</span></div>
+                            <div class="log-line"><span class="log-time">00:00:42</span><span class="log-info">📝
+                                    Exporting to Google Sheets...</span></div>
+                            <div class="log-line"><span class="log-time">00:00:44</span><span class="log-success">===
+                                    Workflow complete === <span class="log-cursor"></span></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="section-inner">
+            <div class="cta-box fade-up">
+                <div class="section-label" style="justify-content:center">Let's Work Together</div>
+                <h2 class="section-title">Ready to Automate<br>Your SEO?</h2>
+                <p class="section-sub" style="text-align:center">
+                    Whether you need a custom SEO tool, a full automation pipeline, or a technical audit, let's build
+                    something powerful.
+                </p>
+                <div class="hero-btns">
+                    <a href="mailto:amalalex95@gmail.com" class="btn btn-primary">Get in Touch ↗</a>
+                    <a href="index.html" class="btn btn-ghost">Open Console →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">SEO AI AGENT PLAYGROUND</div>
+        <div class="footer-links" style="display:flex;gap:12px;align-items:center;">
+            <a href="https://www.linkedin.com/in/amal-alexander-305780131/" target="_blank"
+                class="footer-social-link">LinkedIn ↗</a>
+            <a href="mailto:amalalex95@gmail.com" class="footer-social-link">Email ↗</a>
+            <a href="https://x.com/amallx1997" target="_blank" class="footer-social-link">X ↗</a>
+            <a href="https://wa.me/917977475259" target="_blank" class="footer-social-link">WhatsApp ↗</a>
+            <a href="https://www.instagram.com/amal_alex_96/" target="_blank" class="footer-social-link">Instagram ↗</a>
+        </div>
+        <div class="footer-copy">Amal Alexander · 2026</div>
+    </footer>
+
+    <script>
+        // ── SPARKLE PARTICLE ANIMATION ──────────────────────────────
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = document.body.scrollHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor() { this.reset(true); }
+            reset(initial) {
+                this.x = Math.random() * canvas.width;
+                this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
+                this.size = Math.random() * 1.5 + 0.3;
+                this.speedY = -(Math.random() * 0.4 + 0.1);
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.opacity = 0;
+                this.maxOpacity = Math.random() * 0.6 + 0.1;
+                this.fadeSpeed = Math.random() * 0.008 + 0.003;
+                this.fading = false;
+                this.life = Math.random() * 200 + 100;
+                this.age = initial ? Math.random() * this.life : 0;
+                // occasionally make a slightly bigger sparkle
+                this.sparkle = Math.random() > 0.85;
+                this.twinkleSpeed = Math.random() * 0.05 + 0.02;
+                this.twinkleOffset = Math.random() * Math.PI * 2;
+                this.color = this.pickColor();
+            }
+            pickColor() {
+                const colors = [
+                    '255,255,255', // white (most common)
+                    '255,255,255',
+                    '255,255,255',
+                    '0,255,136',   // green accent
+                    '0,212,255',   // cyan accent
+                    '168,85,247',  // purple accent (rare)
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.age++;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                // Fade in
+                if (!this.fading && this.opacity < this.maxOpacity) {
+                    this.opacity = Math.min(this.maxOpacity, this.opacity + this.fadeSpeed);
+                }
+                // Start fading out near end of life
+                if (this.age > this.life * 0.7) this.fading = true;
+                if (this.fading) this.opacity -= this.fadeSpeed * 0.8;
+                if (this.opacity <= 0 || this.age > this.life) this.reset(false);
+            }
+            draw() {
+                const twinkle = this.sparkle
+                    ? this.maxOpacity * (0.5 + 0.5 * Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset))
+                    : this.opacity;
+                const alpha = Math.max(0, Math.min(1, this.sparkle ? twinkle : this.opacity));
+                if (alpha <= 0) return;
+
+                ctx.save();
+                if (this.sparkle) {
+                    // Draw a small 4-point star
+                    ctx.globalAlpha = alpha;
+                    ctx.fillStyle = `rgba(${this.color},${alpha})`;
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = `rgba(${this.color},0.8)`;
+                    const s = this.size * 2;
+                    ctx.beginPath();
+                    for (let i = 0; i < 4; i++) {
+                        const angle = (i / 4) * Math.PI * 2;
+                        const innerAngle = angle + Math.PI / 4;
+                        ctx.lineTo(this.x + Math.cos(angle) * s, this.y + Math.sin(angle) * s);
+                        ctx.lineTo(this.x + Math.cos(innerAngle) * s * 0.3, this.y + Math.sin(innerAngle) * s * 0.3);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Simple dot
+                    ctx.globalAlpha = alpha;
+                    ctx.fillStyle = `rgba(${this.color},1)`;
+                    ctx.shadowBlur = this.size > 1 ? 4 : 0;
+                    ctx.shadowColor = `rgba(${this.color},0.6)`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Create particles — keep it subtle
+        const PARTICLE_COUNT = Math.min(120, Math.floor(window.innerWidth / 8));
+        for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Resize canvas height on scroll to cover full page
+        let resizeTimer;
+        window.addEventListener('scroll', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                canvas.height = document.body.scrollHeight;
+            }, 200);
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    // Stagger siblings
+                    const siblings = entry.target.parentElement.querySelectorAll('.fade-up');
+                    siblings.forEach((el, idx) => {
+                        setTimeout(() => { el.classList.add('visible'); }, idx * 80);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Marquee duplicate for seamless scroll
+        const track = document.getElementById('marquee');
+        if (track) {
+            // Already duplicated in HTML for seamless loop
+        }
+
+        // Node card tilt on hover
+        document.querySelectorAll('.node-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+                const rotX = ((y - cy) / cy) * -5;
+                const rotY = ((x - cx) / cx) * 5;
+                card.style.transform = `translateY(-4px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+                card.style.transformStyle = 'preserve-3d';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+
+</body>
+
+</html>
